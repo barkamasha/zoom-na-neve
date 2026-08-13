@@ -221,6 +221,11 @@ section{padding:92px 0}
 .promo h3{color:var(--ink)}
 .promo{color:var(--ink)}
 .agree input{accent-color:#211E1B}
+
+.chlabel{font-size:13.5px;color:var(--ink-2);font-weight:600;margin:2px 0 10px}
+.channels{display:flex;gap:8px;margin-bottom:14px}
+.channels .ch{flex:1;padding:12px 6px;border:1.5px solid var(--line);background:#fff;border-radius:12px;font-family:'Manrope';font-weight:700;font-size:14px;cursor:pointer;color:var(--ink-2);transition:.2s}
+.channels .ch.active{background:var(--accent);border-color:var(--accent);color:#fff}
 </style>
 </head>
 <body>
@@ -430,7 +435,14 @@ section{padding:92px 0}
           <h3 style="font-family:'Montserrat';font-weight:800;font-size:22px;margin-bottom:6px">Заявка на консультацию</h3>
           <p style="color:var(--ink-2);font-size:14px;margin-bottom:20px">Перезвоним в течение 15 минут</p>
           <input type="text" placeholder="Ваше имя" id="fName">
-          <input type="tel" placeholder="+7 (___) ___-__-__" id="fPhone">
+          <div class="chlabel">Где вам удобнее связаться?</div>
+          <div class="channels" id="channels">
+            <button type="button" class="ch" data-c="whatsapp">WhatsApp</button>
+            <button type="button" class="ch" data-c="telegram">Telegram</button>
+            <button type="button" class="ch" data-c="max">Max</button>
+          </div>
+          <input type="tel" placeholder="Ваш телефон" id="fPhone" style="display:none">
+          <input type="text" placeholder="Ваш ник в Телеграме (необязательно)" id="fNick" style="display:none">
           <label class="agree"><input type="checkbox" id="fAgree" checked style="width:auto;margin:0"> Согласен на обработку персональных данных и получение информации о проекте</label>
           <button class="btn" onclick="submitForm()">Отправить заявку</button>
           <div class="form-note">⚙️ Форма-заглушка: интеграция с Calltouch подключается позже</div>
@@ -553,11 +565,15 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();docume
 // ---- phone mask + demo form ----
 const fp=document.getElementById('fPhone');
 fp.addEventListener('input',()=>{let v=fp.value.replace(/\D/g,'').slice(0,11);if(v.startsWith('8'))v='7'+v.slice(1);let o='+7';if(v.length>1)o+=' ('+v.slice(1,4);if(v.length>=4)o+=') '+v.slice(4,7);if(v.length>=7)o+='-'+v.slice(7,9);if(v.length>=9)o+='-'+v.slice(9,11);fp.value=o;});
+let __ch=null;
+document.querySelectorAll('#channels .ch').forEach(b=>{b.onclick=()=>{document.querySelectorAll('#channels .ch').forEach(x=>x.classList.remove('active'));b.classList.add('active');__ch=b.dataset.c;document.getElementById('fPhone').style.display='block';document.getElementById('fNick').style.display=(__ch==='telegram')?'block':'none';};});
 function submitForm(){
   const n=document.getElementById('fName').value.trim();
-  const p=document.getElementById('fPhone').value.trim();
+  if(!n){alert('Введите имя');return;}
+  if(!__ch){alert('Выберите, где вам удобнее связаться');return;}
+  const p=document.getElementById('fPhone').value.replace(/\D/g,'');
+  if(p.length<11){alert('Введите телефон');return;}
   if(!document.getElementById('fAgree').checked){alert('Отметьте согласие на обработку персональных данных');return;}
-  if(!n||p.length<10){alert('Заполните имя и телефон');return;}
   document.getElementById('form').classList.add('done');
 }
 
