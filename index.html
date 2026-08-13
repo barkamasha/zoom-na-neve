@@ -527,7 +527,7 @@ function renderPlans(k){
   f.rows.slice().sort((a,b)=>parseFloat(a[0])-parseFloat(b[0])).forEach(r=>{
     const el=document.createElement('div');el.className='plan';
     const draw=r[2]?'<div class="draw"><img src="'+r[2]+'" alt="Планировка '+f.label+' '+r[0]+' м²" onclick="openLb(this.src)"></div>':'<div class="draw ic">'+PLICON+'</div>';
-    el.innerHTML=draw+'<div class="t">'+f.label+'</div><div class="area">от '+r[0]+' м²</div><div class="price">от '+r[1]+' ₽</div><a class="more" href="#contact">Узнать подробнее</a>';
+    el.innerHTML=draw+'<div class="t">'+f.label+'</div><div class="area">от '+r[0]+' м²</div><div class="price">от '+r[1]+' ₽</div>';
     g.appendChild(el);
   });
 }
